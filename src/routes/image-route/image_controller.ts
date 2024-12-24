@@ -4,10 +4,8 @@ import axios, { AxiosError } from 'axios';
 import { ImgbbUploadResponse } from '../../types/imgbb_upload_response';
 import { db } from '../../db/db';
 import { ImageTable, TImageTableInsert } from '../../db/schema/image';
+import FormData from 'form-data';
 import 'dotenv/config';
-
-const FormData = require('form-data');
-const fs = require('fs');
 
 export async function uploadImage(req: Request, res: Response) {
     try {
@@ -18,7 +16,7 @@ export async function uploadImage(req: Request, res: Response) {
             return;
         }
 
-        const file = req.file;
+        const file = req.file?.buffer.toString('base64');
 
         if (!file) {
             sendError(res, 400, 'File is required');
@@ -26,7 +24,7 @@ export async function uploadImage(req: Request, res: Response) {
         }
 
         const form = new FormData();
-        form.append('image', fs.createReadStream(file?.path));
+        form.append('image', file);
 
         const url = `https://api.imgbb.com/1/upload?key=${process.env.IMGBB_API_KEY}`;
         const data = await axios.post<ImgbbUploadResponse>(url, form);
