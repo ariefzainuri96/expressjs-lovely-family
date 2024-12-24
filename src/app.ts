@@ -4,6 +4,7 @@ import imageRoutes from './routes/image-route/image_route';
 import { TReqUser } from './types/req-user';
 import cors from 'cors';
 import morgan from 'morgan';
+import { db } from './db/db';
 
 const path = require('path');
 
@@ -31,6 +32,16 @@ app.use('/image', imageRoutes);
 // greetings
 app.get('/', (_, res: Response) => {
     res.send('You are connected to Lovely Family API');
+});
+
+app.get('/testuser', async (_, res: Response) => {
+    const data = await db.query.UserTable.findMany();
+
+    res.status(200).json({
+        status: 200,
+        message: 'Get All Users',
+        data: data,
+    });
 });
 
 // function loggerMiddleware(req: Request, res: Response, next: NextFunction) {
