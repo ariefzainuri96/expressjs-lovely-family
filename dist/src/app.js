@@ -22,7 +22,7 @@ app.use('/users', user_route_1.default);
 app.use('/image', image_route_1.default);
 // greetings
 app.get('/', (_, res) => {
-    res.send('You are connected to Frontend Jobs API');
+    res.send('You are connected to Lovely Family API');
 });
 // function loggerMiddleware(req: Request, res: Response, next: NextFunction) {
 //     console.log(

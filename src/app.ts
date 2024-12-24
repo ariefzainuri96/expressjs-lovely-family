@@ -30,7 +30,7 @@ app.use('/image', imageRoutes);
 
 // greetings
 app.get('/', (_, res: Response) => {
-    res.send('You are connected to Frontend Jobs API');
+    res.send('You are connected to Lovely Family API');
 });
 
 // function loggerMiddleware(req: Request, res: Response, next: NextFunction) {
