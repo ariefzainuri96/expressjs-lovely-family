@@ -1,6 +1,9 @@
 import { relations } from 'drizzle-orm';
 import { pgTable, serial, uniqueIndex, varchar } from 'drizzle-orm/pg-core';
 import { z } from 'zod';
+import { ImageTable } from './image';
+import { InvitationCodeTable } from './invitation-code';
+import { FamilyUserTable } from './family-user';
 
 export const UserTable = pgTable(
     'user',
@@ -16,23 +19,16 @@ export const UserTable = pgTable(
     ]
 );
 
-// export const UserTableRelations = relations(UserTable, ({ many }) => {
-//     return {
-//         pengumuman: many(PengumumanTable),
-//     };
-// });
-
-// export const PengumumanTableRelations = relations(
-//     PengumumanTable,
-//     ({ one }) => {
-//         return {
-//             author: one(UserTable, {
-//                 fields: [PengumumanTable.authorId],
-//                 references: [UserTable.id],
-//             }),
-//         };
-//     },
-// );
+export const UserTableRelations = relations(UserTable, ({ one, many }) => {
+    return {
+        image: many(ImageTable),
+        family: many(FamilyUserTable),
+        invitationCode: one(InvitationCodeTable, {
+            fields: [UserTable.id],
+            references: [InvitationCodeTable.userId],
+        }),
+    };
+});
 
 export type TUserTable = typeof UserTable.$inferSelect;
 

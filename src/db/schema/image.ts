@@ -1,13 +1,6 @@
-import {
-    integer,
-    pgTable,
-    serial,
-    text,
-    uniqueIndex,
-    varchar,
-} from 'drizzle-orm/pg-core';
+import { integer, pgTable, serial, text, varchar } from 'drizzle-orm/pg-core';
 import { UserTable } from './user';
-import { FamilyTable } from './family';
+import { relations } from 'drizzle-orm';
 
 export const ImageTable = pgTable('image', {
     id: serial('id').primaryKey(),
@@ -19,6 +12,15 @@ export const ImageTable = pgTable('image', {
     userId: integer('userId')
         .references(() => UserTable.id)
         .notNull(),
+});
+
+export const ImageTableRelations = relations(ImageTable, ({ one, many }) => {
+    return {
+        user: one(UserTable, {
+            fields: [ImageTable.userId],
+            references: [UserTable.id],
+        }),
+    };
 });
 
 export type TImageTableInsert = typeof ImageTable.$inferInsert;
