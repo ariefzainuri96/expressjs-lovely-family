@@ -3,9 +3,18 @@ import { handleError, sendError } from '../../utils/helper';
 import { db } from '../../db/db';
 import { eq } from 'drizzle-orm';
 import { InvitationCodeTable } from '../../db/schema/invitation-code';
+import { ZInvitationCodeRequest } from './request/invitation-code-request';
 
 export async function getInvitationCode(req: Request, res: Response) {
     try {
+        const validation = ZInvitationCodeRequest.safeParse(req.body);
+
+        if (!validation.success) {
+            const { errors } = validation.error;
+            const error = errors.map((item) => item.message);
+            return sendError(res, 400, error.join(', '));
+        }
+
         const user = req.user;
 
         if (!user) {
@@ -28,6 +37,7 @@ export async function getInvitationCode(req: Request, res: Response) {
                 .insert(InvitationCodeTable)
                 .values({
                     userId: user.id,
+                    familyId: validation.data.familyId,
                 })
                 .returning();
 
