@@ -7,7 +7,7 @@ exports.upload = void 0;
 const multer_1 = __importDefault(require("multer"));
 const storage = multer_1.default.diskStorage({
     destination: (req, file, cb) => {
-        cb(null, '/multer');
+        cb(null, '/tmp');
     },
     filename: (req, file, cb) => {
         cb(null, Date.now().toString() + '_' + file.originalname);
