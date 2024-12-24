@@ -38,3 +38,7 @@ export const ZUserTable = z.object({
         .min(1, { message: 'Password is required' })
         .default(''),
 });
+
+export const ZLoginWithCode = z.object({
+    code: z.string().min(1, { message: 'Code is required' }).default(''),
+});

@@ -6,6 +6,7 @@ import { db } from '../../db/db';
 import { ImageTable, TImageTableInsert } from '../../db/schema/image';
 import FormData from 'form-data';
 import 'dotenv/config';
+import { eq } from 'drizzle-orm';
 
 export async function uploadImage(req: Request, res: Response) {
     try {
@@ -57,6 +58,24 @@ export async function uploadImage(req: Request, res: Response) {
         if (error instanceof AxiosError) {
             console.log('Error upload image, error: ', error.response?.data);
         }
+        sendError(res, 500, handleError(error));
+    }
+}
+
+export async function getImage(req: Request, res: Response) {
+    try {
+        const user = req.user;
+
+        const data = await db.query.ImageTable.findMany({
+            where: eq(ImageTable.userId, user?.id ?? 0),
+        });
+
+        res.status(200).json({
+            status: 200,
+            message: 'Success get image',
+            data,
+        });
+    } catch (error) {
         sendError(res, 500, handleError(error));
     }
 }

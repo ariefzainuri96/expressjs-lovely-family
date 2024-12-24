@@ -4,7 +4,28 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { db } from '../../db/db';
 import { eq } from 'drizzle-orm';
-import { UserTable, ZUserTable } from '../../db/schema/user';
+import {
+    TUserTable,
+    UserTable,
+    ZLoginWithCode,
+    ZUserTable,
+} from '../../db/schema/user';
+import { InvitationCodeTable } from '../../db/schema/invitation-code';
+
+function getToken(user: TUserTable) {
+    const token = jwt.sign(
+        {
+            email: user.email,
+            id: user.id,
+        },
+        `${process.env.ACCESS_TOKEN_SECRET}`,
+        {
+            expiresIn: '365d',
+        }
+    );
+
+    return token;
+}
 
 export const register = async (req: Request, res: Response) => {
     try {
@@ -67,21 +88,10 @@ export const login = async (req: Request, res: Response) => {
             user &&
             (await bcrypt.compare(validation.data.password, user.password))
         ) {
-            const token = jwt.sign(
-                {
-                    email: user.email,
-                    id: user.id,
-                },
-                `${process.env.ACCESS_TOKEN_SECRET}`,
-                {
-                    expiresIn: '365d',
-                }
-            );
-
             res.status(200).json({
                 status: 200,
                 message: 'Login Success',
-                data: token,
+                data: getToken(user),
             });
         } else {
             return sendError(res, 401, 'Email or Password is not valid');
@@ -115,3 +125,39 @@ export const current = async (req: Request, res: Response) => {
         sendError(res, 500, handleError(error));
     }
 };
+
+export async function loginWithCode(req: Request, res: Response) {
+    try {
+        const validation = ZLoginWithCode.safeParse(req.body);
+
+        if (!validation.success) {
+            const { errors } = validation.error;
+            const error = errors.map((item) => item.message);
+            return sendError(res, 400, error.join(', '));
+        }
+
+        const code = await db.query.InvitationCodeTable.findFirst({
+            where: eq(InvitationCodeTable.code, validation.data.code),
+        });
+
+        if (!code) {
+            return sendError(res, 400, 'Code is not valid');
+        }
+
+        const user = await db.query.UserTable.findFirst({
+            where: eq(UserTable.id, code.userId),
+        });
+
+        if (!user) {
+            return sendError(res, 400, 'The user who invite you is not valid');
+        }
+
+        res.status(200).json({
+            status: 200,
+            message: 'Login Success',
+            data: getToken(user),
+        });
+    } catch (error) {
+        sendError(res, 500, handleError(error));
+    }
+}

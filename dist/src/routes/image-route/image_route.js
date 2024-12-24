@@ -10,4 +10,5 @@ const image_controller_1 = require("./image_controller");
 const router = express_1.default.Router();
 router.use(validate_token_1.validateToken);
 router.post('/upload', multer_1.upload.single('image'), image_controller_1.uploadImage);
+router.get('/', image_controller_1.getImage);
 exports.default = router;

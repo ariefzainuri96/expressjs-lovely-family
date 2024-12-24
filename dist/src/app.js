@@ -6,10 +6,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const user_route_1 = __importDefault(require("./routes/user-route/user_route"));
 const image_route_1 = __importDefault(require("./routes/image-route/image_route"));
+const invitation_route_1 = __importDefault(require("./routes/invitation-route/invitation-route"));
 const cors_1 = __importDefault(require("cors"));
 const morgan_1 = __importDefault(require("morgan"));
-const db_1 = require("./db/db");
-const path = require('path');
 const app = (0, express_1.default)();
 // enabling CORS for any unknown origin(https://xyz.example.com)
 app.use((0, cors_1.default)());
@@ -20,17 +19,10 @@ app.use(express_1.default.json());
 // routers
 app.use('/users', user_route_1.default);
 app.use('/image', image_route_1.default);
+app.use('/invitation', invitation_route_1.default);
 // greetings
 app.get('/', (_, res) => {
     res.send('You are connected to Lovely Family API');
-});
-app.get('/testuser', async (_, res) => {
-    const data = await db_1.db.query.UserTable.findMany();
-    res.status(200).json({
-        status: 200,
-        message: 'Get All Users',
-        data: data,
-    });
 });
 // function loggerMiddleware(req: Request, res: Response, next: NextFunction) {
 //     console.log(

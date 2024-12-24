@@ -26,13 +26,14 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.uploadImage = void 0;
+exports.getImage = exports.uploadImage = void 0;
 const helper_1 = require("../../utils/helper");
 const axios_1 = __importStar(require("axios"));
 const db_1 = require("../../db/db");
 const image_1 = require("../../db/schema/image");
 const form_data_1 = __importDefault(require("form-data"));
 require("dotenv/config");
+const drizzle_orm_1 = require("drizzle-orm");
 async function uploadImage(req, res) {
     var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o;
     try {
@@ -82,3 +83,21 @@ async function uploadImage(req, res) {
     }
 }
 exports.uploadImage = uploadImage;
+async function getImage(req, res) {
+    var _a;
+    try {
+        const user = req.user;
+        const data = await db_1.db.query.ImageTable.findMany({
+            where: (0, drizzle_orm_1.eq)(image_1.ImageTable.userId, (_a = user === null || user === void 0 ? void 0 : user.id) !== null && _a !== void 0 ? _a : 0),
+        });
+        res.status(200).json({
+            status: 200,
+            message: 'Success get image',
+            data,
+        });
+    }
+    catch (error) {
+        (0, helper_1.sendError)(res, 500, (0, helper_1.handleError)(error));
+    }
+}
+exports.getImage = getImage;
