@@ -7,7 +7,7 @@ exports.upload = void 0;
 const multer_1 = __importDefault(require("multer"));
 const storage = multer_1.default.diskStorage({
     destination: (req, file, cb) => {
-        cb(null, '../../../../../Backend/Node-js/lovely-family/upload');
+        cb(null, '/multer');
     },
     filename: (req, file, cb) => {
         cb(null, Date.now().toString() + '_' + file.originalname);
