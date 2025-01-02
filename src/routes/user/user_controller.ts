@@ -112,14 +112,15 @@ export const current = async (req: Request, res: Response) => {
 
         const data = await db.query.UserTable.findFirst({
             where: eq(UserTable.email, user.email),
+            columns: {
+                password: false,
+            },
         });
 
         res.status(200).json({
             status: 200,
             message: 'Get Current Profile Success',
-            data: {
-                email: data?.email,
-            },
+            data: data,
         });
     } catch (error) {
         sendError(res, 500, handleError(error));

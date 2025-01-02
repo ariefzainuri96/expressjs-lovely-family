@@ -3,16 +3,15 @@ import { handleError, sendError } from '../../utils/helper';
 import { db } from '../../db/db';
 import { eq } from 'drizzle-orm';
 import { InvitationCodeTable } from '../../db/schema/invitation-code';
-import { ZInvitationCodeRequest } from './request/invitation-code-request';
 
 export async function getInvitationCode(req: Request, res: Response) {
     try {
-        const validation = ZInvitationCodeRequest.safeParse(req.body);
+        const familyId = req.params.familyId;
 
-        if (!validation.success) {
-            const { errors } = validation.error;
-            const error = errors.map((item) => item.message);
-            return sendError(res, 400, error.join(', '));
+        console.log(`familyId ${familyId}`);
+
+        if (!familyId) {
+            return sendError(res, 400, 'Family id is required');
         }
 
         const user = req.user;
@@ -23,7 +22,7 @@ export async function getInvitationCode(req: Request, res: Response) {
         }
 
         const invitationCode = await db.query.InvitationCodeTable.findFirst({
-            where: eq(InvitationCodeTable.userId, user.id),
+            where: eq(InvitationCodeTable.familyId, Number(familyId)),
         });
 
         let code;
@@ -37,7 +36,7 @@ export async function getInvitationCode(req: Request, res: Response) {
                 .insert(InvitationCodeTable)
                 .values({
                     userId: user.id,
-                    familyId: validation.data.familyId,
+                    familyId: Number(familyId),
                 })
                 .returning();
 

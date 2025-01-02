@@ -97,13 +97,14 @@ const current = async (req, res) => {
         }
         const data = await db_1.db.query.UserTable.findFirst({
             where: (0, drizzle_orm_1.eq)(user_1.UserTable.email, user.email),
+            columns: {
+                password: false,
+            },
         });
         res.status(200).json({
             status: 200,
             message: 'Get Current Profile Success',
-            data: {
-                email: data === null || data === void 0 ? void 0 : data.email,
-            },
+            data: data,
         });
     }
     catch (error) {

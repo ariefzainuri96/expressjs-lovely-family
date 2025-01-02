@@ -5,14 +5,12 @@ const helper_1 = require("../../utils/helper");
 const db_1 = require("../../db/db");
 const drizzle_orm_1 = require("drizzle-orm");
 const invitation_code_1 = require("../../db/schema/invitation-code");
-const invitation_code_request_1 = require("./request/invitation-code-request");
 async function getInvitationCode(req, res) {
     try {
-        const validation = invitation_code_request_1.ZInvitationCodeRequest.safeParse(req.body);
-        if (!validation.success) {
-            const { errors } = validation.error;
-            const error = errors.map((item) => item.message);
-            return (0, helper_1.sendError)(res, 400, error.join(', '));
+        const familyId = req.params.familyId;
+        console.log(`familyId ${familyId}`);
+        if (!familyId) {
+            return (0, helper_1.sendError)(res, 400, 'Family id is required');
         }
         const user = req.user;
         if (!user) {
@@ -20,7 +18,7 @@ async function getInvitationCode(req, res) {
             return;
         }
         const invitationCode = await db_1.db.query.InvitationCodeTable.findFirst({
-            where: (0, drizzle_orm_1.eq)(invitation_code_1.InvitationCodeTable.userId, user.id),
+            where: (0, drizzle_orm_1.eq)(invitation_code_1.InvitationCodeTable.familyId, Number(familyId)),
         });
         let code;
         if (invitationCode) {
@@ -32,7 +30,7 @@ async function getInvitationCode(req, res) {
                 .insert(invitation_code_1.InvitationCodeTable)
                 .values({
                 userId: user.id,
-                familyId: validation.data.familyId,
+                familyId: Number(familyId),
             })
                 .returning();
             code = newInvitationCode[0].code;

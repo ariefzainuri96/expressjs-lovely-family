@@ -52,11 +52,11 @@ export async function getFamilyList(req: Request, res: Response) {
 
         if (!user) return sendError(res, 401, 'Unauthorized');
 
-        const family = await db.query.FamilyUserTable.findMany({
+        const family = await db.query.FamilyTable.findMany({
             with: {
-                family: true,
+                createdBy: true,
             },
-            where: eq(FamilyUserTable.userId, user.id),
+            where: eq(FamilyTable.createdById, user.id),
         });
 
         if (!family) return sendError(res, 404, 'Family not found');

@@ -8,5 +8,5 @@ const validate_token_1 = require("../../middleware/validate_token");
 const InvitationController_1 = require("./InvitationController");
 const router = express_1.default.Router();
 router.use(validate_token_1.validateToken);
-router.get('/getInvitationCode', InvitationController_1.getInvitationCode);
+router.get('/getInvitationCode/:familyId', InvitationController_1.getInvitationCode);
 exports.default = router;

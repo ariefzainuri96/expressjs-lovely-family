@@ -6,6 +6,6 @@ const router = express.Router();
 
 router.use(validateToken);
 
-router.get('/getInvitationCode', getInvitationCode);
+router.get('/getInvitationCode/:familyId', getInvitationCode);
 
 export default router;

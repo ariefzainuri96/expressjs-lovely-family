@@ -5,7 +5,6 @@ const drizzle_orm_1 = require("drizzle-orm");
 const pg_core_1 = require("drizzle-orm/pg-core");
 const zod_1 = require("zod");
 const image_1 = require("./image");
-const invitation_code_1 = require("./invitation-code");
 const family_user_1 = require("./family-user");
 exports.UserTable = (0, pg_core_1.pgTable)('user', {
     id: (0, pg_core_1.serial)('id').primaryKey(),
@@ -20,10 +19,6 @@ exports.UserTableRelations = (0, drizzle_orm_1.relations)(exports.UserTable, ({ 
     return {
         image: many(image_1.ImageTable),
         family: many(family_user_1.FamilyUserTable),
-        invitationCode: one(invitation_code_1.InvitationCodeTable, {
-            fields: [exports.UserTable.id],
-            references: [invitation_code_1.InvitationCodeTable.userId],
-        }),
     };
 });
 exports.ZUserTable = zod_1.z.object({

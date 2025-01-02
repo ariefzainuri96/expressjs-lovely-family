@@ -44,11 +44,11 @@ async function getFamilyList(req, res) {
         const user = req.user;
         if (!user)
             return (0, helper_1.sendError)(res, 401, 'Unauthorized');
-        const family = await db_1.db.query.FamilyUserTable.findMany({
+        const family = await db_1.db.query.FamilyTable.findMany({
             with: {
-                family: true,
+                createdBy: true,
             },
-            where: (0, drizzle_orm_1.eq)(family_user_1.FamilyUserTable.userId, user.id),
+            where: (0, drizzle_orm_1.eq)(family_1.FamilyTable.createdById, user.id),
         });
         if (!family)
             return (0, helper_1.sendError)(res, 404, 'Family not found');
