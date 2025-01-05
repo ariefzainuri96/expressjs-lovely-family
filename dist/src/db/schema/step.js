@@ -6,7 +6,7 @@ const user_1 = require("./user");
 const drizzle_orm_1 = require("drizzle-orm");
 const zod_1 = require("zod");
 exports.StepTable = (0, pg_core_1.pgTable)('step', {
-    id: (0, pg_core_1.serial)('id').primaryKey(),
+    id: (0, pg_core_1.uuid)('id').primaryKey().notNull(),
     count: (0, pg_core_1.integer)('count').notNull(),
     startTime: (0, pg_core_1.text)('startTime').notNull(),
     endTime: (0, pg_core_1.text)('endTime').notNull(),
@@ -25,6 +25,11 @@ exports.StepTableRelations = (0, drizzle_orm_1.relations)(exports.StepTable, ({ 
 exports.ZStepTable = zod_1.z.object({
     records: zod_1.z
         .array(zod_1.z.object({
+        id: zod_1.z
+            .string()
+            .uuid()
+            .min(1, { message: 'Id is required' })
+            .default(''),
         count: zod_1.z
             .number()
             .min(1, { message: 'Count must be greater than 0' })

@@ -15,13 +15,16 @@ const addStep = async (req, res) => {
         const user = req.user;
         const steps = validation.data.records.map((item) => {
             return {
+                id: item.id,
                 count: item.count,
                 startTime: item.startTime,
                 endTime: item.endTime,
                 userId: user.id,
             };
         });
-        await db_1.db.insert(step_1.StepTable).values(steps);
+        await db_1.db.insert(step_1.StepTable).values(steps).onConflictDoNothing({
+            target: step_1.StepTable.id,
+        });
         res.status(200).json({
             status: 200,
             message: 'Success adding step data',

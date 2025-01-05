@@ -1,10 +1,10 @@
-import { integer, pgTable, serial, text, varchar } from 'drizzle-orm/pg-core';
+import { integer, pgTable, text, uuid } from 'drizzle-orm/pg-core';
 import { UserTable } from './user';
 import { relations } from 'drizzle-orm';
 import { z } from 'zod';
 
 export const StepTable = pgTable('step', {
-    id: serial('id').primaryKey(),
+    id: uuid('id').primaryKey().notNull(),
     count: integer('count').notNull(),
     startTime: text('startTime').notNull(),
     endTime: text('endTime').notNull(),
@@ -28,6 +28,11 @@ export const ZStepTable = z.object({
     records: z
         .array(
             z.object({
+                id: z
+                    .string()
+                    .uuid()
+                    .min(1, { message: 'Id is required' })
+                    .default(''),
                 count: z
                     .number()
                     .min(1, { message: 'Count must be greater than 0' })
