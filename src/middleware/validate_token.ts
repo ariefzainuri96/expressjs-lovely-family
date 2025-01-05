@@ -24,7 +24,7 @@ export const validateToken = async (
                 );
             }
 
-            req.user = decoded as TReqUser | undefined;
+            req.user = decoded as TReqUser;
 
             next();
         });

@@ -5,6 +5,7 @@ const family_image_1 = require("./schema/family-image");
 const family_user_1 = require("./schema/family-user");
 const image_1 = require("./schema/image");
 const invitation_code_1 = require("./schema/invitation-code");
+const step_1 = require("./schema/step");
 const user_1 = require("./schema/user");
 exports.default = {
     UserTable: user_1.UserTable,
@@ -19,4 +20,6 @@ exports.default = {
     FamilyImageTableRelations: family_image_1.FamilyImageTableRelations,
     FamilyUserTable: family_user_1.FamilyUserTable,
     FamilyUserTableRelations: family_user_1.FamilyUserTableRelations,
+    StepTable: step_1.StepTable,
+    StepTableRelations: step_1.StepTableRelations,
 };

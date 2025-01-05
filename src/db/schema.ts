@@ -12,6 +12,7 @@ import {
     InvitationCodeTable,
     InvitationCodeTableRelations,
 } from './schema/invitation-code';
+import { StepTable, StepTableRelations } from './schema/step';
 import { UserTable, UserTableRelations } from './schema/user';
 
 export default {
@@ -27,4 +28,6 @@ export default {
     FamilyImageTableRelations,
     FamilyUserTable,
     FamilyUserTableRelations,
+    StepTable,
+    StepTableRelations,
 };

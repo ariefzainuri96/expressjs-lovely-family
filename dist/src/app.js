@@ -9,6 +9,7 @@ const image_route_1 = __importDefault(require("./routes/image/image_route"));
 const invitation_route_1 = __importDefault(require("./routes/invitation/invitation-route"));
 const FamilyRoute_1 = __importDefault(require("./routes/family/FamilyRoute"));
 const FamilyImageRoute_1 = __importDefault(require("./routes/family-image/FamilyImageRoute"));
+const step_route_1 = __importDefault(require("./routes/step/step_route"));
 const cors_1 = __importDefault(require("cors"));
 const morgan_1 = __importDefault(require("morgan"));
 const app = (0, express_1.default)();
@@ -23,6 +24,7 @@ app.use('/image', image_route_1.default);
 app.use('/invitation', invitation_route_1.default);
 app.use('/family', FamilyRoute_1.default);
 app.use('/family-image', FamilyImageRoute_1.default);
+app.use('/step', step_route_1.default);
 // greetings
 app.get('/', (_, res) => {
     res.send('You are connected to Lovely Family API');

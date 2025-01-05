@@ -4,13 +4,14 @@ import imageRoutes from './routes/image/image_route';
 import invitationRoutes from './routes/invitation/invitation-route';
 import familyRoutes from './routes/family/FamilyRoute';
 import familyImageRoutes from './routes/family-image/FamilyImageRoute';
+import stepRoutes from './routes/step/step_route';
 import { TReqUser } from './types/req-user';
 import cors from 'cors';
 import morgan from 'morgan';
 
 declare module 'express-serve-static-core' {
     interface Request {
-        user?: TReqUser;
+        user: TReqUser;
     }
 }
 
@@ -28,6 +29,7 @@ app.use('/image', imageRoutes);
 app.use('/invitation', invitationRoutes);
 app.use('/family', familyRoutes);
 app.use('/family-image', familyImageRoutes);
+app.use('/step', stepRoutes);
 
 // greetings
 app.get('/', (_, res: Response) => {
